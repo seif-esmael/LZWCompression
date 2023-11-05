@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
+
 package lzw;
 
 import java.io.BufferedReader;
@@ -20,10 +17,9 @@ import java.util.logging.Logger;
 public class LZW {
 
     /**
-     * @param filePath
-     * @return 
+     * @param filePath  the path of the file to be compressed
      */        
-    public static List<Integer> compress(String filePath) {  
+    public static void compress(String filePath) {
         try {
             String input = readFile(filePath);
             Map<String, Integer> dictionary = new HashMap<>();
@@ -42,10 +38,9 @@ public class LZW {
                 }
             }
             compressed.add(dictionary.get(current));
-            return compressed;
+            saveCompressedToFile(compressed, "compressed.txt");
         } catch (IOException ex) {
             Logger.getLogger(LZW.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }        
     }
     private static String readFile(String filePath) throws IOException {
@@ -80,9 +75,9 @@ public class LZW {
         }
     }
 
-    public static void decompress(){
+    public static void decompress(String filePath) {
         try {
-            String inputToBeCompressed=readFile("compressed.txt");
+            String inputToBeCompressed=readFile(filePath);
             String[] input=inputToBeCompressed.split(" ");
             int[] inputInt=new int[input.length];
             for (int i = 0; i < input.length; i++) {
@@ -106,7 +101,7 @@ public class LZW {
                     }
                     else{
                         if(inputInt[i]>=128){
-                            output.append(lastOperationSymbols+lastOperationSymbols.charAt(0));
+                            output.append(lastOperationSymbols).append(lastOperationSymbols.charAt(0));
                             dictionary.put(startNumber++,lastOperationSymbols+lastOperationSymbols.charAt(0));
                             lastOperationSymbols+=lastOperationSymbols.charAt(0);
                         }
@@ -125,7 +120,8 @@ public class LZW {
 
     }
     public static void main(String[] args) {
-
+        compress("input.txt");
+        decompress("compressed.txt");
 
     }
 }
